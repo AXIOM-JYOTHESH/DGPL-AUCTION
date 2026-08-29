@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "66f10aa2a1b2c3d4e5f60111",
+    "name": "Unrivalled Knights",
+    "image": "https://via.placeholder.com/128?text=CSK",
+    "captain": "66f5000000000000000000a4",
+    "players": ["66f5000000000000000000a4"],
+    "budget": 100
+  },
+  {
+    "_id": "66f10aa2a1b2c3d4e5f60112",
+    "name": "X1 Musketeers",
+    "image": "https://via.placeholder.com/128?text=MI",
+    "captain": "66f5000000000000000000a1",
+    "players": ["66f5000000000000000000a1"],
+    "budget": 100
+  },
+  {
+    "_id": "66f10aa2a1b2c3d4e5f60113",
+    "name": "Power House",
+    "image": "https://via.placeholder.com/128?text=DC",
+    "captain": "66f5000000000000000000a3",
+    "players": ["66f5000000000000000000a3"],
+    "budget": 100
+  },
+  {
+    "_id": "66f10aa2a1b2c3d4e5f60114",
+    "name": "Intimidators",
+    "image": "https://via.placeholder.com/128?text=SRH",
+    "captain": "66f5000000000000000000a2",
+    "players": ["66f5000000000000000000a2"],
+    "budget": 100
+  }
+]

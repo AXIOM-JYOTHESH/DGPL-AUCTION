@@ -1,0 +1,526 @@
+[
+  {
+    "name": "Tharun Guguloth",
+    "year": 1,
+    "category": "Bowler",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759317706/Tharun_Guguloth_page-0001_xfzcij.jpg"
+  },
+  {
+    "name": "Ade Mahendar Singh Dhoni",
+    "year": 1,
+    "category": "Batsman",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314371/IMG-20250504-WA0028_-_Dhoni_Ade_jrz2sv.jpg"
+  },
+  {
+    "name": "Nenavath Ajay",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314395/IMG_3842_-_Nenavath_Ajay_mqcpvs.jpg"
+  },
+  {
+    "name": "Ganesh",
+    "year": 1,
+    "category": "Batsman",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314356/1747129046574_-_D._Ganesh_zx1fql.jpg"
+  },
+  {
+    "name": "Sai Preetham Padala",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314371/IMG-20250820-WA0001_-_Sai_Preetham_vawak7.jpg"
+  },
+  {
+    "name": "Shankar Rathod",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314356/IMG_20250929_201636_-_Shankar_Rathod_kmdlon.jpg"
+  },
+  {
+    "name": "Nithin Nethavath",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314354/25eb82a1-5c3b-4606-9286-f25dfaacc065_-_NETHAVATH_NITHIN_bkvf8s.jpg"
+  },
+  {
+    "name": "Gugulothu Dinesh",
+    "year": 1,
+    "category": "Bowler",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314358/BK036682_-_Gugulothu_Dinesh_qozsne.jpg"
+  },
+  {
+    "name": "Vijay",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314370/IMG_20250930_080344_-_Vijay_Pathlavath_dojv2r.png"
+  },
+  {
+    "name": "Metta Adithya Vardhan",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314404/IMG_20250930_131835_-_Aditya_vardhan_Metta_ywhor9.jpg"
+  },
+  {
+    "name": "Patil Hari Charan Reddy",
+    "year": 1,
+    "category": "Batsman",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314403/IMG_20250912_193855104_1_-_Hari_Charan_Reddy_bgkouv.jpg"
+  },
+  {
+    "name": "Mudavath Varun Chowhan",
+    "year": 1,
+    "category": "All-Rounder",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314384/20250820_112130_-_Varun_Chowhan_tcgobp.jpg"
+  },
+  {
+    "name": "Thota Bhargav Anand",
+    "year": 1,
+    "category": "Batsman",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG-20250930-WA0013_-_Bhargav_Anand_Thota_ofhsfd.jpg"
+  },
+  {
+    "name": "Karthikeya",
+    "year": 1,
+    "category": "Batsman",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG_20250930_202149_-_Karthikeya_jrlepp.jpg"
+  },
+  {
+    "name": "Kondeboyina Prabhas",
+    "year": 1,
+    "category": "Bowler",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314424/Snapchat-1933628495_-_Prabhas_K_yqhk44.jpg"
+  },
+  {
+    "name": "Karakala Ram Manohar",
+    "year": 1,
+    "category": "Wicket-Keeper",
+    "basePrice": 0.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314416/Screenshot_20250820_105431_-_Ram_Manohar_rliwmf.jpg"
+  },
+  {
+    "name": "Bharath Goud",
+    "year": 2,
+    "category": "All-Rounder",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314354/IMG_2729_-_P._Bharath_goud_prt5sc.jpg"
+  },
+  {
+    "name": "Chennakesavula Pavan Teja",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314378/Screenshot_2025-09-29-09-23-45-96_6012fa4d4ddec268fc5c7112cbb265e7_-_Pavan_Teja_Chennakesavula_zn4dkm.jpg"
+  },
+  {
+    "name": "Janagonda Manjunath",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314371/IMG_20250929_093955_-_Manjunath_efjhmm.jpg"
+  },
+  {
+    "name": "Sabavath Ashok Chowhan",
+    "year": 2,
+    "category": "All-Rounder",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759317453/WhatsApp_Image_2025-10-01_at_16.45.13_7a0275bd_y0ty40.jpg"
+  },
+  {
+    "name": "Karthikeya",
+    "year": 2,
+    "category": "Bowler",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314376/IMG-20250929-WA0002_-_karthikeya_gurrapu_eckam0.jpg"
+  },
+  {
+    "name": "Shanmukh",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314370/IMG_20250929_175052_-_Shannu_K_uiqx0x.jpg"
+  },
+  {
+    "name": "Abhishek Rathod",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG-20250930-WA0010_-_karthikeya_gurrapu_eahwzz.jpg"
+  },
+  {
+    "name": "Mahendar",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG-20250930-WA0012_-_karthikeya_gurrapu_krj3fb.jpg"
+  },
+  {
+    "name": "Teja Swaroop",
+    "year": 2,
+    "category": "All-Rounder",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314416/photo_-_Teja_Swaroop_jhe7ev.jpg"
+  },
+  {
+    "name": "Banothu Shreyas",
+    "year": 2,
+    "category": "All-Rounder",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314404/IMG_20250930_170853_-_Shreyas_Nayak_zwg2tu.png"
+  },
+  {
+    "name": "Charan",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG_20250930_175459_-_Charan_Puvvala_vb2gmj.jpg"
+  },
+  {
+    "name": "Vishnu Nunnaboina",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314403/IMG_20250916_084825403_2_-_Adi_Lakshmi_xc0vok.jpg"
+  },
+  {
+    "name": "Arjun Badavath",
+    "year": 2,
+    "category": "Batsman",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314417/Screenshot_20251001_113242_Instagram_1_-_Arjun_Badavath_tz4mx8.jpg"
+  },
+  {
+    "name": "Charan Ramana",
+    "year": 2,
+    "category": "All-Rounder",
+    "basePrice": 1,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759317866/Charan_Ramana_eywcyn.jpg"
+  },
+  {
+    "name": "Bhukya Siddhu Naik",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314424/siddhu_naik_-_Siddhu_Bhukya_oszyyj.jpg"
+  },
+  {
+    "name": "Tharun",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314379/tharun_-_Katravath_Tharun_u04f2g.jpg"
+  },
+  {
+    "name": "Manoj Dharavath",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314361/IMG_4386_-_Dharavath_Manoj_yyozzh.jpg"
+  },
+  {
+    "name": "Jyothesh",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314360/IMG_7944_Original_-_kodem_jyothesh_syumgw.jpg"
+  },
+  {
+    "name": "Anil",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314370/IMG_8391_-_Anil_yzh6b3.jpg"
+  },
+  {
+    "_id": "66f5000000000000000000a1",
+    "name": "Raghavendra",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "isCaptain": true,
+    "team": "66f10aa2a1b2c3d4e5f60112",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314384/b23a047c-7e1f-4582-9ec2-7fb87ef2f4b5_-_Guguloth_Raghavendra_oq1yjo.jpg"
+  },
+  {
+    "name": "Yeswanth",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314386/DSC_1343_2_-_Yeswanth_Chitturi_otgxoq.jpg"
+  },
+  {
+    "name": "Vetapalem Sai Udheep",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314383/4de22765-6b43-4402-9807-8589a389caca_-_Sai_Pawan_Kumaar_Thota_prgz87.jpg"
+  },
+  {
+    "name": "Akhilesh Nayak",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314403/IMG_20250812_201934_-_Akhilesh_Nayak_caobgb.jpg"
+  },
+  {
+    "name": "Sharath Rathod",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314358/DSC_1642_-_sharathrathod_b4bpuh.jpg"
+  },
+  {
+    "_id": "66f5000000000000000000a2",
+    "name": "Santhosh Kumar",
+    "year": 3,
+    "category": "Wicket-Keeper",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "isCaptain": true,
+    "team": "66f10aa2a1b2c3d4e5f60114",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314416/Screenshot_2025-09-30-12-24-13-506_com.whatsapp_-_Santhoshkumar_A_zobpwt.jpg"
+  },
+  {
+    "name": "Sai Pawan Kumaar Thota",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314396/IMG_5721_-_Saipawan_Thota_tiecsi.jpg"
+  },
+  {
+    "name": "Kowsik",
+    "year": 3,
+    "category": "Wicket-Keeper",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314404/IMG_20250930_102220_-_Kowsik_Lalam_ntrim6.jpg"
+  },
+  {
+    "name": "Kanakala Haneesh Krishna Vamsy",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314403/IMG_20250526_145549_-_KANAKALA_HANEESH_KRISHNA_VAMSY_ona3xf.jpg"
+  },
+  {
+    "name": "Jaswanth",
+    "year": 3,
+    "category": "Batsman",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314404/IMG_20250930_163937_-_Sapavath_Jaswanth_mswksz.jpg"
+  },
+  {
+    "_id": "66f5000000000000000000a3",
+    "name": "Gowtham Nayak",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "isCaptain": true,
+    "team": "66f10aa2a1b2c3d4e5f60113",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314395/IMG_3883_-_Gowtham_fdbmsp.jpg"
+  },
+  {
+    "_id": "66f5000000000000000000a4",
+    "name": "Ram Charan",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "isCaptain": true,
+    "team": "66f10aa2a1b2c3d4e5f60111",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314360/IMG_4681_-_ramcharan_qhcxeo.jpg"
+  },
+  {
+    "name": "Dhanush",
+    "year": 3,
+    "category": "All-Rounder",
+    "basePrice": 1.5,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314396/IMG_5064_-_Sphinx_2k24day3_lpn8wa.jpg"
+  },
+  {
+    "name": "Tejavath Shashi",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314371/IMG-20250927-WA0002_-_Shashi_Sharath_wxh1zr.jpg"
+  },
+  {
+    "name": "Banavath Vinayak",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314358/IMG_0678_-_Vinayak_Banavath_vfva3u.jpg"
+  },
+  {
+    "name": "Dharavath Vishnu",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314359/IMG_3074_-_Vishnu_Prasad_oldrxd.jpg"
+  },
+  {
+    "name": "Rohith",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314355/IMG_4519_-_ROHITH_BOINI_ydos4p.jpg"
+  },
+  {
+    "name": "Prakash Reddy",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314378/IMG-20250930-WA0000_-_Nitya_Prakash_Reddy_Pulagam_ypk7wz.jpg"
+  },
+  {
+    "name": "Siddhartha Reddy Kandula",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314397/IMG_7985_-_Copy_-_Siddhartha_Reddy_Kandula_t65hz1.jpg"
+  },
+  {
+    "name": "Narayana Raju",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314384/20250330_085036_Original_-_ACHUTH_RAJU_rjham6.jpg"
+  },
+  {
+    "name": "Peddi Sai Preetham",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314403/IMG_20250824_023739_799_-_Sai_Preetham_Peddi_yld5st.webp"
+  },
+  {
+    "name": "Lokesh",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314384/1000080912_2_1_3_-_NUNE_LOKESH_gpqoza.jpg"
+  },
+  {
+    "name": "Santhosh Chauhan",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314397/IMG_20240416_120104_-_Santhosh_naik_rx8bet.jpg"
+  },
+  {
+    "name": "Venkat Chowdary",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314416/pfp_-_venkat_chowdary_-_venkat_chowdary_vqmuj5.jpg"
+  },
+  {
+    "name": "Rahul",
+    "year": 4,
+    "category": "Batsman",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314358/IMG_1781_-_Rahul_Banoth_wewkud.jpg"
+  },
+  {
+    "name": "Rithwik Reddy",
+    "year": 4,
+    "category": "Wicket-Keeper",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314361/20250330_090109_-_Rithwik_Reddy_-_venkat_chowdary_t1uwp6.jpg"
+  },
+  {
+    "name": "Narendar",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314415/IMG-20250420-WA0006_2_-_MALOTHU_NARENDAR_-_Malothu_Narendar_xlqwla.jpg"
+  },
+  {
+    "name": "Meghavath Rahul",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314384/cricpic_-_Rahul_Meghavath_fbh7n7.jpg"
+  },
+  {
+    "name": "Bhavani Shankar",
+    "year": 4,
+    "category": "All-Rounder",
+    "basePrice": 2,
+    "status": "unsold",
+    "image": "https://res.cloudinary.com/dw3lm8vql/image/upload/v1759314389/IMG_2452_-_Bhavani_Shankar_Daspe_fylgzx.jpg"
+  }
+]

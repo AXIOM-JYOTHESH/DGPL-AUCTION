@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Admin User",
+    "email": "admin@dgplauction.com",
+    "password": "AdminPass123!",
+    "role": "admin"
+  },
+  {
+    "name": "Unrivalled Knights Captain",
+    "email": "captain.unrivalledknights@dgplauction.com",
+    "password": "CaptainPassUK",
+    "role": "captain",
+    "team": "66f10aa2a1b2c3d4e5f60111",
+    "playerProfile": "66f5000000000000000000a4"
+  },
+  {
+    "name": "X1 Musketeers Captain",
+    "email": "captain.x1musketeers@dgplauction.com",
+    "password": "CaptainPassXM",
+    "role": "captain",
+    "team": "66f10aa2a1b2c3d4e5f60112",
+    "playerProfile": "66f5000000000000000000a1"
+  },
+  {
+    "name": "Power House Captain",
+    "email": "captain.powerhouse@dgplauction.com",
+    "password": "CaptainPassPH",
+    "role": "captain",
+    "team": "66f10aa2a1b2c3d4e5f60113",
+    "playerProfile": "66f5000000000000000000a3"
+  },
+  {
+    "name": "Intimidators Captain",
+    "email": "captain.intimidators@dgplauction.com",
+    "password": "CaptainPassI4",
+    "role": "captain",
+    "team": "66f10aa2a1b2c3d4e5f60114",
+    "playerProfile": "66f5000000000000000000a2"
+  }
+]

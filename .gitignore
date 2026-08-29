@@ -1,0 +1,23 @@
+# Node modules (all levels)
+**/node_modules/
+
+# Environment files
+.env
+.env.*
+**/.env
+**/.env.*
+backend/config.env
+
+# Vite build output
+frontend/dist/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/

@@ -1,0 +1,8 @@
+/* Solid overrides to avoid color-function/OKLCH issues across browsers */
+.btn-solid-login {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+.btn-solid-login:hover {
+  background-color: #1f2937 !important; /* gray-800 */
+}
