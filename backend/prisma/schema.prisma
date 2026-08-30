@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String         @id @default(uuid())
+  name             String?
+  email            String         @unique
+  role             String?        @default("captain")
+  password         String
+  teamId           String?        @unique @map("team_id")
+  team             Team?          @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  playerProfileId  String?        @unique @map("player_profile_id")
+  playerProfile    Player?        @relation("UserPlayerProfile", fields: [playerProfileId], references: [id], onDelete: SetNull)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Team {
+  id         String     @id @default(uuid())
+  name       String     @unique
+  captainId  String?    @unique @map("captain_id")
+  captain    Player?    @relation("TeamCaptain", fields: [captainId], references: [id], onDelete: SetNull)
+  image      String?
+  budget     Float      @default(100.0)
+  players    Player[]   @relation("TeamPlayers")
+  bids       Bid[]
+  user       User?
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  @@map("teams")
+}
+
+model Player {
+  id             String          @id @default(uuid())
+  name           String
+  isCaptain      Boolean         @default(false) @map("is_captain")
+  year           Int?
+  image          String?
+  category       String          // 'Batsman' | 'Bowler' | 'All-Rounder' | 'Wicket-Keeper'
+  basePrice      Float?          @map("base_price")
+  status         String          @default("unsold") // 'unsold' | 'in_auction' | 'sold'
+  teamId         String?         @map("team_id")
+  team           Team?           @relation("TeamPlayers", fields: [teamId], references: [id], onDelete: SetNull)
+  finalBidPrice  Float?          @map("final_bid_price")
+  bids           Bid[]
+  captainOf      Team?           @relation("TeamCaptain")
+  userProfile    User?           @relation("UserPlayerProfile")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("players")
+}
+
+model Bid {
+  id         String     @id @default(uuid())
+  playerId   String     @map("player_id")
+  player     Player     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  teamId     String     @map("team_id")
+  team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  bidAmount  Float      @map("bid_amount")
+  timestamp  DateTime   @default(now())
+
+  @@index([playerId])
+  @@index([teamId])
+  @@map("bids")
+}
+
+model AppConfig {
+  id                    String     @id @default(uuid())
+  sessionsInvalidatedAt DateTime   @default(now()) @map("sessions_invalidated_at")
+
+  @@map("app_config")
+}

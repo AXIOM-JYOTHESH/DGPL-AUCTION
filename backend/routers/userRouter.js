@@ -12,12 +12,19 @@ router.post(
   authController.protect,
   authController.restrictTo('admin'),
   async (req, res, next) => {
-    const AppConfig = require('../models/appConfigModel');
-    const cfg = await AppConfig.findOneAndUpdate(
-      {},
-      { sessionsInvalidatedAt: new Date() },
-      { new: true, upsert: true }
-    );
+    const prisma = require('../prismaClient');
+    const existing = await prisma.appConfig.findFirst();
+    let cfg;
+    if (existing) {
+      cfg = await prisma.appConfig.update({
+        where: { id: existing.id },
+        data: { sessionsInvalidatedAt: new Date() },
+      });
+    } else {
+      cfg = await prisma.appConfig.create({
+        data: { sessionsInvalidatedAt: new Date() },
+      });
+    }
     res.status(200).json({ status: 'success', data: cfg });
   }
 );

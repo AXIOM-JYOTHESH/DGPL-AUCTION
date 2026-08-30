@@ -1,15 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const mongoose = require('mongoose');
-const Player = require('./models/playerModel');
-const Team = require('./models/teamModel');
-const User = require('./models/userModel');
-require('dotenv').config({ path: './config.env' });
-
-const Database = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const bcrypt = require('bcryptjs');
+const prisma = require('./prismaClient');
+require('dotenv').config({ path: path.join(__dirname, 'config.env') });
 
 // Read JSON data files
 const dataDir = path.join(__dirname, 'data');
@@ -25,88 +18,128 @@ const users = JSON.parse(
 
 async function importData() {
   try {
-    console.log('Importing teams...');
-    const createdTeams = await Team.create(teams);
-    console.log('Importing players...');
-    const createdPlayers = await Player.create(players);
+    console.log('[Seed] Clearing existing database records...');
+    await prisma.bid.deleteMany({});
+    await prisma.user.deleteMany({});
+    await prisma.player.deleteMany({});
+    await prisma.team.deleteMany({});
+    await prisma.appConfig.deleteMany({});
 
-    // Build quick lookup maps
-    const playersById = new Map(
-      createdPlayers.filter((p) => p._id).map((p) => [String(p._id), p])
-    );
-    const teamsById = new Map(createdTeams.map((t) => [String(t._id), t]));
+    console.log('[Seed] Importing %d teams...', teams.length);
+    for (const t of teams) {
+      await prisma.team.create({
+        data: {
+          id: t._id || undefined,
+          name: t.name.trim(),
+          image: t.image || null,
+          budget: t.budget != null ? parseFloat(t.budget) : 100.0,
+        },
+      });
+    }
 
-    // Ensure captain is in players[] and set Player.team backrefs
-    console.log('Linking team players and captains...');
-    for (const team of createdTeams) {
-      const playerIds = new Set((team.players || []).map((id) => String(id)));
-      if (team.captain) {
-        const cId = String(team.captain);
-        if (!playerIds.has(cId)) {
-          playerIds.add(cId);
+    console.log('[Seed] Importing %d players...', players.length);
+    for (const p of players) {
+      await prisma.player.create({
+        data: {
+          id: p._id || undefined,
+          name: p.name.trim(),
+          isCaptain: Boolean(p.isCaptain),
+          year: p.year != null ? parseInt(p.year, 10) : null,
+          image: p.image || null,
+          category: p.category,
+          basePrice: p.basePrice != null ? parseFloat(p.basePrice) : null,
+          status: p.status || 'unsold',
+          teamId: p.team || null,
+          finalBidPrice: p.finalBidPrice != null ? parseFloat(p.finalBidPrice) : null,
+        },
+      });
+    }
+
+    console.log('[Seed] Linking captains and team rosters...');
+    for (const t of teams) {
+      if (t.captain) {
+        // Ensure captain exists
+        const capExists = await prisma.player.findUnique({ where: { id: t.captain } });
+        if (capExists) {
+          // Set team captain
+          await prisma.team.update({
+            where: { id: t._id },
+            data: { captainId: t.captain },
+          });
+          // Set player team backref and mark captain
+          await prisma.player.update({
+            where: { id: t.captain },
+            data: { teamId: t._id, isCaptain: true },
+          });
         }
       }
-      // Persist updated players array if changed
-      const updatedPlayersArr = Array.from(playerIds);
-      await Team.findByIdAndUpdate(team._id, { players: updatedPlayersArr });
 
-      // Backfill Player.team reference for each listed player
-      for (const pid of updatedPlayersArr) {
-        if (playersById.has(pid)) {
-          await Player.findByIdAndUpdate(pid, { team: team._id });
+      if (Array.isArray(t.players)) {
+        for (const pid of t.players) {
+          const pExists = await prisma.player.findUnique({ where: { id: pid } });
+          if (pExists) {
+            await prisma.player.update({
+              where: { id: pid },
+              data: { teamId: t._id },
+            });
+          }
         }
       }
     }
-    console.log('Importing users (with password hashing)...');
-    await User.create(users); // ensures pre-save hashing runs
-    console.log('Data successfully imported!');
+
+    console.log('[Seed] Importing %d users (with bcrypt hashing)...', users.length);
+    for (const u of users) {
+      const hashedPassword = await bcrypt.hash(u.password, 12);
+      await prisma.user.create({
+        data: {
+          id: u._id || undefined,
+          name: u.name,
+          email: u.email.toLowerCase().trim(),
+          password: hashedPassword,
+          role: u.role || 'captain',
+          teamId: u.team || null,
+          playerProfileId: u.playerProfile || null,
+        },
+      });
+    }
+
+    console.log('[Seed] Creating initial AppConfig...');
+    await prisma.appConfig.create({
+      data: {
+        sessionsInvalidatedAt: new Date(),
+      },
+    });
+
+    console.log('✅ [Seed] Data successfully imported into PostgreSQL!');
   } catch (err) {
-    console.error('Error importing data:', err);
+    console.error('❌ [Seed] Error importing data:', err);
     throw err;
   }
 }
 
 async function deleteData() {
   try {
-    console.log('Starting data deletion...');
-    await Player.deleteMany();
-    await Team.deleteMany();
-    await User.deleteMany();
-    console.log('All Player, Team, and User documents deleted.');
+    console.log('[Seed] Deleting all data...');
+    await prisma.bid.deleteMany({});
+    await prisma.user.deleteMany({});
+    await prisma.player.deleteMany({});
+    await prisma.team.deleteMany({});
+    await prisma.appConfig.deleteMany({});
+    console.log('✅ [Seed] Data successfully deleted!');
   } catch (err) {
-    console.error('Error deleting data:', err);
+    console.error('❌ [Seed] Error deleting data:', err);
     throw err;
   }
 }
 
-if (require.main === module) {
-  (async () => {
-    try {
-      console.log('Connecting to MongoDB...');
-      await mongoose.connect(Database, {
-        serverSelectionTimeoutMS: 20000, // be a bit patient when looking for the server
-      });
-      console.log('DB connection successful!');
-
-      if (process.argv.includes('--delete')) {
-        await deleteData();
-      } else if (process.argv.includes('--import')) {
-        await importData();
-      } else {
-        console.log('No valid flag provided. Use --import or --delete');
-      }
-    } catch (err) {
-      // already logged in helpers; ensure non-zero code
-      process.exitCode = 1;
-    } finally {
-      try {
-        await mongoose.connection.close();
-        console.log('DB connection closed.');
-      } catch (_) {}
-      // Let Node exit naturally with the set exitCode
-    }
-  })();
+if (process.argv[2] === '--import') {
+  importData()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+} else if (process.argv[2] === '--delete') {
+  deleteData()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 }
 
 module.exports = { importData, deleteData };
-

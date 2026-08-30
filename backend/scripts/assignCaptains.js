@@ -1,15 +1,7 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const path = require('path');
-const Team = require('../models/teamModel');
-const Player = require('../models/playerModel');
-
+const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, '..', 'config.env') });
-
-const Database = process.env.DATABASE?.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const prisma = require('../prismaClient');
 
 const mappings = [
   { team: 'Delhi Capitals', playerName: 'Shashi Nayak' },
@@ -19,16 +11,10 @@ const mappings = [
 ];
 
 async function run() {
-  if (!Database) {
-    console.error('DATABASE env not configured.');
-    process.exit(1);
-  }
-  await mongoose.connect(Database, { serverSelectionTimeoutMS: 20000 });
-
   try {
     const results = [];
     for (const { team: teamName, playerName } of mappings) {
-      const team = await Team.findOne({ name: teamName });
+      const team = await prisma.team.findFirst({ where: { name: teamName } });
       if (!team) {
         results.push({
           team: teamName,
@@ -39,7 +25,7 @@ async function run() {
         continue;
       }
 
-      const player = await Player.findOne({ name: playerName });
+      const player = await prisma.player.findFirst({ where: { name: playerName } });
       if (!player) {
         results.push({
           team: teamName,
@@ -50,23 +36,23 @@ async function run() {
         continue;
       }
 
-      // Mark player as captain
-      if (!player.isCaptain) player.isCaptain = true;
-      await player.save();
+      // Update player as captain & assign team
+      await prisma.player.update({
+        where: { id: player.id },
+        data: { isCaptain: true, teamId: team.id },
+      });
 
-      // Assign as team captain and ensure in players list
-      team.captain = player._id;
-      if (!team.players) team.players = [];
-      if (!team.players.some((id) => id.toString() === player._id.toString())) {
-        team.players.push(player._id);
-      }
-      await team.save();
+      // Update team captain
+      await prisma.team.update({
+        where: { id: team.id },
+        data: { captainId: player.id },
+      });
 
       results.push({
         team: teamName,
         player: playerName,
         ok: true,
-        playerId: player._id,
+        playerId: player.id,
       });
     }
 
@@ -75,7 +61,7 @@ async function run() {
     console.error('Error assigning captains:', err);
     process.exitCode = 1;
   } finally {
-    await mongoose.connection.close();
+    await prisma.$disconnect();
   }
 }
 
