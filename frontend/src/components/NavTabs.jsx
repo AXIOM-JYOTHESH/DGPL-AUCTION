@@ -1,68 +1,42 @@
 import React from "react";
 
-const baseBtn =
-  "relative px-7 py-3 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 disabled:opacity-50";
+export default function NavTabs({ activeTab = "live", onChange }) {
+  const tabs = [
+    { id: "live", label: "Live Auction Stage", icon: "🏏" },
+    { id: "summary", label: "Auction Summary & Rosters", icon: "📊" },
+  ];
 
-const NavTabs = ({ activeTab = "live", onChange }) => {
-  const isActive = (tab) => activeTab === tab;
   return (
-    <div className="w-full flex justify-center pt-6 pb-4 px-4">
+    <div className="w-full flex justify-center pt-6 pb-4 px-4 relative z-20">
       <div
-        className="inline-flex bg-white/60 backdrop-blur-xl border border-white/40 shadow-md rounded-full p-1 gap-2"
+        className="inline-flex bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 p-1.5 rounded-2xl shadow-2xl gap-1.5"
         role="tablist"
-        aria-label="Auction navigation"
+        aria-label="Auction views"
       >
-        <button
-          role="tab"
-          aria-selected={isActive("live")}
-          aria-pressed={isActive("live")}
-          tabIndex={isActive("live") ? 0 : -1}
-          onClick={() => onChange && onChange("live")}
-          className={`${baseBtn} ${
-            isActive("live")
-              ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30"
-              : "!bg-black !text-white hover:!bg-gray-800"
-          }`}
-        >
-          <span
-            className={`flex items-center gap-2 ${
-              isActive("live") ? "" : "hover:scale-105"
-            } transition-transform`}
-          >
-            <span className="text-lg">🏏</span>
-            <span className="font-medium tracking-wide">Live Auction</span>
-          </span>
-          {isActive("live") && (
-            <span className="absolute inset-0 rounded-full ring-2 ring-yellow-300/70 animate-pulseSlow pointer-events-none" />
-          )}
-        </button>
-        <button
-          role="tab"
-          aria-selected={isActive("summary")}
-          aria-pressed={isActive("summary")}
-          tabIndex={isActive("summary") ? 0 : -1}
-          onClick={() => onChange && onChange("summary")}
-          className={`${baseBtn} ${
-            isActive("summary")
-              ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30"
-              : "!bg-black !text-white hover:!bg-gray-800"
-          }`}
-        >
-          <span
-            className={`flex items-center gap-2 ${
-              isActive("summary") ? "" : "hover:scale-105"
-            } transition-transform`}
-          >
-            <span className="text-lg">📊</span>
-            <span className="font-medium tracking-wide">Auction Summary</span>
-          </span>
-          {isActive("summary") && (
-            <span className="absolute inset-0 rounded-full ring-2 ring-yellow-300/70 animate-pulseSlow pointer-events-none" />
-          )}
-        </button>
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              tabIndex={isActive ? 0 : -1}
+              onClick={() => onChange?.(tab.id)}
+              className={`relative px-5 sm:px-7 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2 focus:outline-none select-none ${
+                isActive
+                  ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 shadow-lg shadow-amber-500/25 font-black scale-[1.02]"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60"
+              }`}
+            >
+              <span className="text-base sm:text-lg">{tab.icon}</span>
+              <span>{tab.label}</span>
+              {isActive && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-950/40 rounded-full" />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
-};
-
-export default NavTabs;
+}

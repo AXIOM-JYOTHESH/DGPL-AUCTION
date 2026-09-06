@@ -1,6 +1,5 @@
 import React from "react";
 
-// YearSelector dumb component
 export default function YearSelector({
   yearOptions = [],
   selectedYear,
@@ -8,29 +7,23 @@ export default function YearSelector({
 }) {
   return (
     <div className="w-full flex flex-wrap gap-2 mb-8">
-      <div className="inline-flex bg-white/70 backdrop-blur-xl border border-white/50 shadow-md rounded-full p-1 gap-2">
+      <div className="inline-flex bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 p-1.5 rounded-2xl shadow-xl gap-1.5">
         {yearOptions.map((opt) => {
           const active = selectedYear === opt.value;
           return (
             <button
               key={opt.value}
               onClick={() => onSelectYear && onSelectYear(opt.value)}
-              className={`relative px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 focus:outline-none ${
+              className={`relative px-5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 focus:outline-none ${
                 active
-                  ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30 focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
-                  : "bg-red-500 text-white font-bold hover:bg-red-400 hover:shadow-lg shadow-md focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                  ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 shadow-lg shadow-amber-500/25 font-black scale-[1.02]"
+                  : "bg-zinc-900 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60"
               }`}
               type="button"
             >
-              <span
-                className={`flex items-center gap-2 ${
-                  active ? "" : "hover:scale-105"
-                } transition-transform`}
-              >
-                {opt.label}
-              </span>
+              <span>{opt.label}</span>
               {active && (
-                <span className="absolute inset-0 rounded-full ring-2 ring-yellow-300/70 animate-pulseSlow pointer-events-none" />
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-zinc-950/40 rounded-full" />
               )}
             </button>
           );

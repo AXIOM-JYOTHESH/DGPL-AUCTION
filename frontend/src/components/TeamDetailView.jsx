@@ -1,8 +1,24 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/authContextCore";
 import { formatAcademicYear } from "../utils/formatters";
 
-const TeamDetailView = ({ team, teamPlayers = [] }) => {
+const TeamDetailView = ({
+  team,
+  teamPlayers = [],
+  privacyMode = false,
+  auctionCompleted = false,
+}) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+  const userTeamId = user?.team?._id || user?.team;
+  const isOwnTeam = Boolean(
+    userTeamId && (team?._id === userTeamId || team?.id === userTeamId)
+  );
+
+  // Mask other teams' purse and player purchase points if privacy mode is active
+  const isConfidential = privacyMode && !auctionCompleted && !isAdmin && !isOwnTeam;
+
   const formatPts = (val) => (val || val === 0 ? `${val} Pts` : "-");
 
   const categoryBreakdown = useMemo(() => {
@@ -23,134 +39,191 @@ const TeamDetailView = ({ team, teamPlayers = [] }) => {
   if (!team) return null;
 
   return (
-    <div>
-      <h2 className="text-2xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 text-transparent bg-clip-text mb-6 tracking-wide">
-        {team.name}
-      </h2>
-      <div className="grid gap-6 md:grid-cols-3 mb-8">
-        <div className="bg-gray-800/70 border border-gray-700 rounded-xl p-4">
-          <h5 className="text-xs tracking-wider uppercase text-gray-400 mb-1">
-            Players Bought
+    <div className="space-y-6">
+      {/* Team Title & Privacy Status Tag */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-zinc-800/80">
+        <h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-transparent bg-clip-text font-brand tracking-tight">
+          {team.name}
+        </h2>
+        {isConfidential && (
+          <span className="text-xs font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+            <span>🔒</span>
+            <span>Privacy Mode Active — Finances Masked</span>
+          </span>
+        )}
+        {isOwnTeam && privacyMode && !auctionCompleted && (
+          <span className="text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+            <span>🛡️</span>
+            <span>Your Team — Unmasked View</span>
+          </span>
+        )}
+      </div>
+
+      {/* Metrics Row */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="bg-[#0c101d] border border-zinc-800/90 rounded-2xl p-5 shadow-xl">
+          <h5 className="text-[11px] tracking-wider uppercase font-bold text-zinc-400 mb-1.5">
+            Players Acquired
           </h5>
-          <p className="text-2xl font-bold text-white">{teamPlayers.length}</p>
-        </div>
-        <div className="bg-gray-800/70 border border-gray-700 rounded-xl p-4">
-          <h5 className="text-xs tracking-wider uppercase text-gray-400 mb-1">
-            Remaining Budget
-          </h5>
-          <p className="text-2xl font-bold text-yellow-400">
-            {formatPts(team.budget)}
+          <p className="text-3xl font-black text-white font-mono">
+            {teamPlayers.length}
           </p>
         </div>
-        <div className="bg-gray-800/70 border border-gray-700 rounded-xl p-4">
-          <h5 className="text-xs tracking-wider uppercase text-gray-400 mb-1">
-            Highest Bid
+
+        <div className="bg-[#0c101d] border border-zinc-800/90 rounded-2xl p-5 shadow-xl">
+          <h5 className="text-[11px] tracking-wider uppercase font-bold text-zinc-400 mb-1.5">
+            Remaining Purse
           </h5>
-          <p className="text-2xl font-bold text-white">
-            {formatPts(highestBid)}
-          </p>
+          {isConfidential ? (
+            <div className="mt-1">
+              <span className="text-sm font-bold text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 inline-flex items-center gap-1.5">
+                <span>🔒</span>
+                <span>Confidential</span>
+              </span>
+            </div>
+          ) : (
+            <p className="text-3xl font-black text-amber-400 font-mono">
+              {formatPts(team.budget)}
+            </p>
+          )}
+        </div>
+
+        <div className="bg-[#0c101d] border border-zinc-800/90 rounded-2xl p-5 shadow-xl">
+          <h5 className="text-[11px] tracking-wider uppercase font-bold text-zinc-400 mb-1.5">
+            Highest Bid Paid
+          </h5>
+          {isConfidential ? (
+            <div className="mt-1">
+              <span className="text-sm font-bold text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 inline-flex items-center gap-1.5">
+                <span>🔒</span>
+                <span>Confidential</span>
+              </span>
+            </div>
+          ) : (
+            <p className="text-3xl font-black text-white font-mono">
+              {formatPts(highestBid)}
+            </p>
+          )}
         </div>
       </div>
-      <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-5 mb-10">
-        <h5 className="text-xs tracking-wider uppercase text-gray-400 mb-3">
-          Category Breakdown
+
+      {/* Category Breakdown */}
+      <div className="bg-[#0c101d] border border-zinc-800/90 rounded-2xl p-5 shadow-xl">
+        <h5 className="text-[11px] tracking-wider uppercase font-bold text-zinc-400 mb-3">
+          Squad Category Breakdown
         </h5>
         {Object.keys(categoryBreakdown).length === 0 && (
-          <p className="text-sm text-gray-500">No players found.</p>
+          <p className="text-xs text-zinc-500">No players acquired yet.</p>
         )}
-        <ul className="flex flex-wrap gap-4 text-sm">
+        <ul className="flex flex-wrap gap-2.5 text-xs">
           {Object.entries(categoryBreakdown).map(([cat, count]) => (
             <li
               key={cat}
-              className="px-3 py-1 rounded-full bg-gray-800 border border-gray-600 text-gray-200 flex items-center gap-2"
+              className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-700/80 text-zinc-200 flex items-center gap-2"
             >
-              <span className="text-yellow-400 font-semibold">{count}</span>
-              <span className="uppercase tracking-wide text-xs text-gray-400">
+              <span className="text-amber-400 font-black font-mono text-sm">{count}</span>
+              <span className="uppercase tracking-wide font-semibold text-[11px] text-zinc-400">
                 {cat}
               </span>
             </li>
           ))}
         </ul>
       </div>
-      <h3 className="text-lg font-semibold text-white mb-4 tracking-wide">
-        Players ({teamPlayers.length})
-      </h3>
-      {/* Single column on mobile for full-width rows */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {teamPlayers.map((player) => {
-          const isCaptain = player.isCaptain;
-          return (
-            <div
-              key={player._id}
-              className={`relative w-full flex items-center gap-5 bg-gradient-to-r from-gray-800/85 to-gray-900/85 border rounded-2xl p-4 transition-all duration-300 ${
-                isCaptain
-                  ? "border-yellow-500/70 hover:border-yellow-400 hover:shadow-yellow-500/10"
-                  : "border-gray-700 hover:border-emerald-500/60 hover:shadow-emerald-500/10"
-              }`}
-            >
-              {isCaptain && (
-                <span className="absolute -top-3 -left-3 bg-yellow-500 text-gray-900 text-xs font-extrabold px-2 py-1 rounded-full shadow shadow-yellow-500/30">
-                  C
-                </span>
-              )}
-              <Link
-                to={`/player/${player._id}`}
-                className="w-16 h-24 rounded-lg overflow-hidden bg-gray-700 flex-shrink-0 ring-1 ring-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+
+      {/* Players List */}
+      <div>
+        <h3 className="text-base sm:text-lg font-extrabold text-white mb-4 tracking-wide flex items-center gap-2">
+          <span>Roster Members</span>
+          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded-md border border-amber-500/30">
+            {teamPlayers.length}
+          </span>
+        </h3>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {teamPlayers.map((player) => {
+            const isCaptain = player.isCaptain;
+            return (
+              <div
+                key={player._id || player.id}
+                className={`relative w-full flex items-center gap-4 bg-[#0c101d] border rounded-2xl p-4 transition-all duration-300 shadow-lg ${
+                  isCaptain
+                    ? "border-yellow-500/50 hover:border-yellow-400"
+                    : "border-zinc-800 hover:border-zinc-700"
+                }`}
               >
-                <img
-                  src={player.image}
-                  alt={player.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </Link>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-base sm:text-lg font-semibold text-white truncate tracking-wide">
-                  <Link
-                    to={`/player/${player._id}`}
-                    className="hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-sm"
-                  >
-                    {player.name}
-                  </Link>
-                </h4>
-                <div className="text-xs sm:text-sm text-gray-300 mt-1 flex flex-wrap gap-2 leading-relaxed">
-                  <span className="text-yellow-400 font-semibold tracking-wide">
-                    {player.category}
+                {isCaptain && (
+                  <span className="absolute -top-2.5 -left-2.5 bg-yellow-400 text-zinc-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+                    CAPTAIN
                   </span>
-                  {player.year && (
+                )}
+                <Link
+                  to={`/player/${player._id || player.id}`}
+                  className="w-16 h-22 sm:w-18 sm:h-24 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 ring-1 ring-zinc-700/80 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                >
+                  <img
+                    src={player.image}
+                    alt={player.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                  />
+                </Link>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-base sm:text-lg font-bold text-white truncate tracking-tight">
+                    <Link
+                      to={`/player/${player._id || player.id}`}
+                      className="hover:text-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 rounded-sm"
+                    >
+                      {player.name}
+                    </Link>
+                  </h4>
+                  <div className="text-xs text-zinc-400 mt-1 flex flex-wrap gap-2 items-center">
+                    <span className="text-amber-400 font-semibold">
+                      {player.category}
+                    </span>
+                    {player.year && (
+                      <>
+                        <span className="text-zinc-600">•</span>
+                        <span className="text-zinc-300">
+                          {formatAcademicYear(player.year)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right flex flex-col items-end">
+                  {isCaptain ? (
                     <>
-                      <span className="text-gray-600">•</span>
-                      <span className="text-gray-200 font-medium">
-                        {formatAcademicYear(player.year)}
+                      <span className="text-xs font-bold text-yellow-400 tracking-wide">
+                        Captain
+                      </span>
+                      <span className="mt-0.5 text-[10px] uppercase text-yellow-500/70 font-semibold tracking-wider">
+                        Retained
+                      </span>
+                    </>
+                  ) : isConfidential ? (
+                    <>
+                      <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                        🔒 Confidential
+                      </span>
+                      <span className="mt-0.5 text-[10px] uppercase text-zinc-500 font-semibold tracking-wider">
+                        Acquired
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-base sm:text-lg font-black font-mono text-emerald-400 tracking-tight">
+                        {formatPts(player.finalBidPrice)}
+                      </span>
+                      <span className="mt-0.5 text-[10px] uppercase text-emerald-500/70 font-semibold tracking-wider">
+                        Bid Paid
                       </span>
                     </>
                   )}
                 </div>
               </div>
-              <div className="text-right flex flex-col items-end">
-                {isCaptain ? (
-                  <>
-                    <span className="text-xs sm:text-sm font-semibold text-yellow-400 tracking-wide">
-                      Captain
-                    </span>
-                    <span className="mt-0.5 text-[10px] sm:text-[11px] uppercase text-yellow-500/70 font-semibold tracking-wider">
-                      Retained
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-lg sm:text-xl font-extrabold text-emerald-400 tracking-wide">
-                      {formatPts(player.finalBidPrice)}
-                    </span>
-                    <span className="mt-0.5 text-[10px] sm:text-[11px] uppercase text-emerald-500/70 font-semibold tracking-wider">
-                      Bid
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -79,6 +79,8 @@ model Bid {
 model AppConfig {
   id                    String     @id @default(uuid())
   sessionsInvalidatedAt DateTime   @default(now()) @map("sessions_invalidated_at")
+  privacyMode           Boolean    @default(false) @map("privacy_mode")
+  auctionCompleted      Boolean    @default(false) @map("auction_completed")
 
   @@map("app_config")
 }

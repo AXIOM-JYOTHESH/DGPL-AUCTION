@@ -8,6 +8,8 @@ DGPL Auction is a full-stack, real-time web application designed to digitize and
 
 Built to solve a real-world problem, this application transforms the auction experience from a chaotic offline process into a smooth, transparent, and exciting digital event that brings the community together.
 
+> 📖 **Looking to replicate or set up this project from scratch?** See the [Complete Replication & Setup Guide](./REPLICATION_GUIDE.md).
+
 ---
 
 ## 📸 Screenshots / Demo

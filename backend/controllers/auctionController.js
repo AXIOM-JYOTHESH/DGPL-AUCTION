@@ -42,6 +42,9 @@ exports.startAuction = catchAsync(async (req, res, next) => {
 
   const plain = formatPlayer(updatedPlayer);
 
+  // Reset auction clock / gavel state for new player
+  req.app.get('resetAuctionTimer')?.();
+
   // Emit socket event to all connected clients
   if (req.io) {
     console.log('[Auction] Emitting new_player', plain.name, plain.id);
@@ -153,6 +156,9 @@ exports.sellPlayer = catchAsync(async (req, res, next) => {
   const playerPlain = formatPlayer(result.player);
   const teamPlain = formatTeam(result.team);
 
+  // Reset auction timer state
+  req.app.get('resetAuctionTimer')?.();
+
   if (req.io) {
     console.log(
       '[Auction] Emitting server:player_sold',
@@ -214,9 +220,75 @@ exports.markPlayerUnsold = catchAsync(async (req, res, next) => {
 
   const plain = formatPlayer(updatedPlayer);
 
+  // Reset auction timer state
+  req.app.get('resetAuctionTimer')?.();
+
   if (req.io) {
     console.log('[Auction] Emitting player_unsold', plain.name, plain.id);
     req.io.emit('player_unsold', plain);
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { player: plain },
+  });
+});
+
+// Get tournament config (privacy mode & auction completed status)
+exports.getAuctionConfig = catchAsync(async (req, res, next) => {
+  const cfg = await prisma.appConfig.findFirst();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      privacyMode: Boolean(cfg?.privacyMode),
+      auctionCompleted: Boolean(cfg?.auctionCompleted),
+    },
+  });
+});
+
+// Admin triggers random player draw
+exports.startRandomPlayer = catchAsync(async (req, res, next) => {
+  let candidates = await prisma.player.findMany({
+    where: { status: 'available' },
+    include: { team: true, bids: { include: { team: true } } },
+  });
+  if (candidates.length === 0) {
+    candidates = await prisma.player.findMany({
+      where: { status: 'unsold' },
+      include: { team: true, bids: { include: { team: true } } },
+    });
+  }
+
+  if (candidates.length === 0) {
+    return next(new AppError('No available or unsold players left to draw', 400));
+  }
+
+  const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+
+  await prisma.player.updateMany({
+    where: { status: 'in_auction', id: { not: chosen.id } },
+    data: { status: 'available' },
+  });
+
+  const updated = await prisma.player.update({
+    where: { id: chosen.id },
+    data: { status: 'in_auction', finalBidPrice: null, teamId: null },
+    include: {
+      team: true,
+      bids: {
+        include: { team: true },
+        orderBy: { timestamp: 'asc' },
+      },
+    },
+  });
+
+  req.app.get('resetAuctionTimer')?.();
+
+  const plain = formatPlayer(updated);
+  if (req.io) {
+    console.log('[Auction] Emitting new_player from random draw:', plain.name);
+    req.io.emit('new_player', plain);
+    req.io.emit('server:random_draw', { player: plain });
   }
 
   res.status(200).json({

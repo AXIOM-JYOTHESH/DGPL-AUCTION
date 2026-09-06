@@ -12,6 +12,14 @@ router.post(
 );
 
 router.get('/current', auctionController.getCurrentAuctionPlayer);
+router.get('/config', auctionController.getAuctionConfig);
+
+router.post(
+  '/random',
+  authController.protect,
+  authController.restrictTo('admin'),
+  auctionController.startRandomPlayer
+);
 
 router.post(
   '/sell',

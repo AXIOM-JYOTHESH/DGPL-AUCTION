@@ -4,8 +4,8 @@ const SummaryFilter = ({ teams = [], selectedTeamId, onChange }) => {
   return (
     <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div className="max-w-xs w-full">
-        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
-          Team Filter
+        <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+          Filter By Team
         </label>
         <div className="relative">
           <select
@@ -15,42 +15,43 @@ const SummaryFilter = ({ teams = [], selectedTeamId, onChange }) => {
                 : ""
             }
             onChange={(e) => onChange(e.target.value || null)}
-            className="w-full appearance-none bg-gray-800/70 border border-gray-700 text-gray-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 focus:border-yellow-400 transition-colors pr-10"
+            className="w-full appearance-none bg-[#0c101d] border border-zinc-800 text-zinc-200 text-sm font-medium rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-400 transition-colors pr-10 shadow-lg"
           >
-            <option value="">Select Team</option>
+            <option value="">All Teams (Overview)</option>
             {teams.map((team) => (
-              <option key={team._id} value={team._id}>
+              <option key={team._id || team.id} value={team._id || team.id}>
                 {team.name}
               </option>
             ))}
           </select>
-          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-400">
+          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-zinc-500 text-xs">
             ▼
           </span>
         </div>
       </div>
-      <div className="flex gap-3 flex-wrap">
+
+      <div className="flex gap-2.5 flex-wrap">
         <button
           type="button"
           onClick={() => onChange(null)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium tracking-wide transition-colors border ${
+          className={`px-4 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all border ${
             selectedTeamId === null
-              ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-gray-900 font-semibold border-yellow-400 shadow shadow-yellow-500/30"
-              : "!bg-black !text-white !border-gray-700 hover:!bg-gray-800"
+              ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 font-black border-amber-300 shadow-lg shadow-amber-500/20"
+              : "bg-[#0c101d] text-zinc-400 border-zinc-800 hover:text-zinc-200 hover:bg-zinc-800/60"
           }`}
         >
-          Recently Sold
+          Recently Sold Feed
         </button>
         <button
           type="button"
           onClick={() => onChange("available")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium tracking-wide transition-colors border ${
+          className={`px-4 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all border ${
             selectedTeamId === "available"
-              ? "bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-gray-900 font-semibold border-yellow-400 shadow shadow-yellow-500/30"
-              : "!bg-black !text-white !border-gray-700 hover:!bg-gray-800"
+              ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 font-black border-amber-300 shadow-lg shadow-amber-500/20"
+              : "bg-[#0c101d] text-zinc-400 border-zinc-800 hover:text-zinc-200 hover:bg-zinc-800/60"
           }`}
         >
-          Available Players
+          Available Player Pool
         </button>
       </div>
     </div>

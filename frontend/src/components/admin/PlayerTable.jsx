@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-// PlayerTable dumb component
 export default function PlayerTable({
   players = [],
   onStartAuction,
@@ -10,38 +9,42 @@ export default function PlayerTable({
 }) {
   const [confirmId, setConfirmId] = useState(null);
   const [confirmUnsoldId, setConfirmUnsoldId] = useState(null);
+
   if (!players.length) return null;
   const display = players
     .filter((p) => p.status !== "sold")
     .sort((a, b) => a.name.localeCompare(b.name));
   if (!display.length) return null;
+
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className="overflow-x-auto rounded-2xl border border-zinc-800 bg-[#0c101d] shadow-2xl">
+      <table className="min-w-full divide-y divide-zinc-800">
+        <thead className="bg-zinc-900/90 text-zinc-400">
           <tr>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Name
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
+              Player Name
             </th>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
               Category
             </th>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
               Base Price
             </th>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
               Current Bid
             </th>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
               Leading Team
             </th>
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-wider">
               Status
             </th>
-            <th className="px-4 py-2" />
+            <th className="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-wider">
+              Action
+            </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-zinc-800/60">
           {display.map((p) => {
             const isLive = p.status === "in_auction";
             const hasBids = p.bidHistory && p.bidHistory.length > 0;
@@ -64,51 +67,56 @@ export default function PlayerTable({
                 (p.team && p.team.name) ||
                 "—"
               : "—";
+
             return (
               <tr
                 key={p._id}
-                className={
-                  "hover:bg-gray-50 " +
-                  (isLive ? "bg-yellow-50 ring-1 ring-yellow-300" : "")
-                }
+                className={`transition-colors ${
+                  isLive
+                    ? "bg-amber-500/10 border-l-4 border-l-amber-400"
+                    : "hover:bg-zinc-900/50"
+                }`}
               >
-                <td className="px-4 py-2 text-sm font-medium text-gray-800">
+                <td className="px-5 py-4 text-sm font-bold text-white">
                   {p.name}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-600">
-                  {p.category || "-"}
+                <td className="px-5 py-4 text-xs font-medium text-zinc-300">
+                  <span className="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700">
+                    {p.category || "-"}
+                  </span>
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-600">
+                <td className="px-5 py-4 text-sm font-semibold text-zinc-400 font-mono">
                   {p.basePrice != null ? `${p.basePrice} Pts` : "—"}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-800 font-semibold">
+                <td className="px-5 py-4 text-sm font-black text-amber-300 font-mono">
                   {currentBid}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-700">
+                <td className="px-5 py-4 text-xs font-bold text-zinc-300">
                   {leadingTeamName}
                 </td>
-                <td className="px-4 py-2 text-sm text-gray-600">
+                <td className="px-5 py-4 text-xs">
                   {isLive ? (
-                    <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded-full text-xs font-semibold">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                       Live
                     </span>
                   ) : (
-                    <span className="text-gray-500 text-xs">Unsold</span>
+                    <span className="text-zinc-500 font-medium">Available</span>
                   )}
                 </td>
-                <td className="px-4 py-2 text-right space-x-2">
+                <td className="px-5 py-4 text-right space-x-2">
                   {!isLive && (
                     <button
                       onClick={() => onStartAuction && onStartAuction(p._id)}
                       disabled={disabled || isLive}
-                      className={`inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 ${
+                      className={`inline-flex items-center gap-1 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all focus:outline-none ${
                         disabled
-                          ? "bg-indigo-200 border-indigo-300 text-indigo-700 cursor-not-allowed"
-                          : "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-500"
+                          ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+                          : "bg-gradient-to-r from-amber-500 to-yellow-400 text-zinc-950 hover:brightness-110 shadow-md shadow-amber-500/20 active:scale-95"
                       }`}
                       type="button"
                     >
-                      {disabled ? "Starting..." : "Start"}
+                      {disabled ? "Starting..." : "Start Auction"}
                     </button>
                   )}
                   {isLive && hasBids && (
@@ -122,20 +130,20 @@ export default function PlayerTable({
                         }
                       }}
                       disabled={disabled}
-                      className={`inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium border focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition-colors ${
+                      className={`inline-flex items-center gap-1 rounded-xl px-3.5 py-1.5 text-xs font-extrabold transition-all focus:outline-none ${
                         disabled
-                          ? "bg-green-200 text-green-800 cursor-not-allowed"
+                          ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                           : isConfirming
-                          ? "bg-green-700 text-white border-green-700 hover:bg-green-600"
-                          : "bg-green-600 text-white hover:bg-green-500"
+                          ? "bg-emerald-500 text-zinc-950 font-black"
+                          : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/30"
                       }`}
                       type="button"
                     >
                       {disabled
                         ? "Saving..."
                         : isConfirming
-                        ? "Confirm"
-                        : "Sell"}
+                        ? "Confirm Sale"
+                        : "Sell Player"}
                     </button>
                   )}
                   {isLive && !hasBids && (
@@ -149,20 +157,20 @@ export default function PlayerTable({
                         }
                       }}
                       disabled={disabled}
-                      className={`inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium border focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors ${
+                      className={`inline-flex items-center gap-1 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all focus:outline-none ${
                         disabled
-                          ? "bg-red-200 text-red-800 cursor-not-allowed"
+                          ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                           : isConfirmingUnsold
-                          ? "bg-red-700 text-white border-red-700 hover:bg-red-600"
-                          : "bg-red-600 text-white hover:bg-red-500"
+                          ? "bg-red-500 text-white font-bold"
+                          : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700"
                       }`}
                       type="button"
                     >
                       {disabled
                         ? "Updating..."
                         : isConfirmingUnsold
-                        ? "Confirm"
-                        : "Unsold"}
+                        ? "Confirm Unsold"
+                        : "Mark Unsold"}
                     </button>
                   )}
                 </td>

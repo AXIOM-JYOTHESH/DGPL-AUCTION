@@ -14,6 +14,7 @@ import AdminPage from "./pages/AdminPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
 import { useSocket } from "./context/useSocket";
 import { useAuth } from "./context/authContextCore";
+import { playSoldCelebration, playGavel } from "./utils/audioEffects";
 
 function App() {
   const { isAuthenticated, user } = useAuth();
@@ -79,6 +80,7 @@ function App() {
     const handleNewBid = (payload) => {
       if (import.meta.env.DEV)
         console.log("[Socket] server:new_bid payload", payload);
+      playGavel();
       setCurrentPlayer((prev) => {
         if (!prev) return prev;
         if (prev._id !== payload.playerId) return prev; // ignore if for different player
@@ -118,6 +120,7 @@ function App() {
       // payload.player expected
       const p = payload?.player || payload; // flexibility
       if (import.meta.env.DEV) console.log("[Socket] player_sold", p?._id);
+      playSoldCelebration();
       if (p) {
         setRecentlySold({
           name: p.name,
@@ -157,6 +160,7 @@ function App() {
     const handlePlayerUnsold = (payload) => {
       const p = payload?.player || payload;
       if (import.meta.env.DEV) console.log("[Socket] player_unsold", p?._id);
+      playGavel();
       if (p) {
         setRecentlyUnsold({ name: p.name, until: Date.now() + 8000 });
         setCurrentPlayer(null);
@@ -255,7 +259,10 @@ function App() {
   }, [currentPlayer]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#080b11] text-zinc-100 selection:bg-amber-500/30 selection:text-amber-200 relative overflow-x-hidden">
+      {/* Subtle ambient lighting effect */}
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(245,158,11,0.07),transparent)] z-0" />
+
       {/* Toast Container */}
       {toasts.length > 0 && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-3 items-center w-full max-w-md px-4">
@@ -271,7 +278,7 @@ function App() {
           element={
             <>
               <NavTabs activeTab={activeTab} onChange={setActiveTab} />
-              <main className="container mx-auto px-4 pb-16">
+              <main className="container mx-auto px-4 pb-16 relative z-10">
                 {activeTab === "live" && (
                   <div className="flex justify-center w-full">
                     {recentlySold && !currentPlayer ? (
