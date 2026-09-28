@@ -100,6 +100,15 @@ app.use('/api/v1/teams', teamRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auction', auctionRouter);
 
+// Root health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'DGPL Cricket Auction Backend API is LIVE and running! 🏏',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Simple health endpoint for origin/proxy checks
 app.get('/healthz', (req, res) => {
   res.status(200).json({ status: 'ok' });
