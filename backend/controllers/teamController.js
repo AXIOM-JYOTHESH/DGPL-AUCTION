@@ -134,3 +134,63 @@ exports.addPlayerToTeam = catchAsync(async (req, res, next) => {
     body: formatTeam(updatedTeam),
   });
 });
+
+// EXPORT ALL TEAMS ROSTERS AS CSV
+// Exact format: Team Name, Captain Name, Player Name, Sold Points
+exports.exportSquadsCSV = catchAsync(async (req, res, next) => {
+  const teams = await prisma.team.findMany({
+    include: {
+      captain: true,
+      user: true,
+      players: {
+        orderBy: { name: 'asc' },
+      },
+    },
+    orderBy: { name: 'asc' },
+  });
+
+  const rows = [['Team Name', 'Captain Name', 'Player Name', 'Sold Points']];
+
+  teams.forEach((t) => {
+    const teamName = t.name || 'Unknown Team';
+    let captainName = 'Not Assigned';
+
+    if (t.captain && t.captain.name) {
+      captainName = t.captain.name;
+    } else if (Array.isArray(t.players)) {
+      const cap = t.players.find((p) => p.isCaptain);
+      if (cap && cap.name) {
+        captainName = cap.name;
+      }
+    } else if (t.user && t.user.name) {
+      captainName = t.user.name;
+    }
+
+    if (t.players && t.players.length > 0) {
+      t.players.forEach((p) => {
+        rows.push([
+          `"${teamName.replace(/"/g, '""')}"`,
+          `"${captainName.replace(/"/g, '""')}"`,
+          `"${(p.name || '').replace(/"/g, '""')}"`,
+          p.finalBidPrice != null ? p.finalBidPrice : (p.basePrice || 0),
+        ]);
+      });
+    } else {
+      rows.push([
+        `"${teamName.replace(/"/g, '""')}"`,
+        `"${captainName.replace(/"/g, '""')}"`,
+        'None',
+        '0',
+      ]);
+    }
+  });
+
+  const csv = rows.map((r) => r.join(',')).join('\r\n');
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename="DGPL_2026_Final_Squads.csv"'
+  );
+  return res.status(200).send(csv);
+});

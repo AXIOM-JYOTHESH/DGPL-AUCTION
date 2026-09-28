@@ -1,4 +1,5 @@
 import React from "react";
+import { downloadSquadsCSV } from "../utils/exportSquadsHelper";
 
 const SummaryFilter = ({ teams = [], selectedTeamId, onChange }) => {
   return (
@@ -52,6 +53,15 @@ const SummaryFilter = ({ teams = [], selectedTeamId, onChange }) => {
           }`}
         >
           Available Player Pool
+        </button>
+        <button
+          type="button"
+          onClick={() => downloadSquadsCSV()}
+          className="px-4 py-2 rounded-xl text-xs font-black tracking-wide transition-all border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+          title="Export final squads CSV (Team Name, Captain Name, Player Name, Sold Points)"
+        >
+          <span>📥</span>
+          <span>Download Squads (.CSV)</span>
         </button>
       </div>
     </div>

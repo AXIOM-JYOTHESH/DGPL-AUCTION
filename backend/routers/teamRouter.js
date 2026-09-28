@@ -20,6 +20,8 @@ router
     teamController.createTeam
   );
 
+router.get('/export.csv', teamController.exportSquadsCSV);
+
 router
   .route('/:id')
   .get(teamController.getTeam)

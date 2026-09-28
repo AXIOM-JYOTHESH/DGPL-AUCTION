@@ -6,6 +6,7 @@ import { useSocket } from "../context/useSocket";
 import AuctionTimer from "../components/AuctionTimer";
 import AdminTimerControls from "../components/admin/AdminTimerControls";
 import PlayerRegistrationsManager from "../components/admin/PlayerRegistrationsManager";
+import { downloadSquadsCSV } from "../utils/exportSquadsHelper";
 
 // Admin Control Panel: select academic year, view unsold players for that year, start an auction
 const yearOptions = [
@@ -533,6 +534,16 @@ export default function AdminPage() {
               {pendingCount} New
             </span>
           )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => downloadSquadsCSV()}
+          className="ml-auto px-4 py-2.5 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-all shadow-md active:scale-95 cursor-pointer"
+          title="Download exact rosters CSV (Team Name, Captain Name, Player Name, Sold Points)"
+        >
+          <span>📥</span>
+          <span>Download Squads (.CSV)</span>
         </button>
       </div>
 
