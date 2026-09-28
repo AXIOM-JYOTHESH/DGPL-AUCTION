@@ -135,10 +135,9 @@ exports.addPlayerToTeam = catchAsync(async (req, res, next) => {
   });
 });
 
-// EXPORT ALL TEAMS ROSTERS AS CSV
-// Exact format: Team Name, Captain Name, Player Name, Sold Points
+// EXPORT ALL TEAMS ROSTERS AS CSV (Side-by-side layout: each team appears once)
 exports.exportSquadsCSV = catchAsync(async (req, res, next) => {
-  const teams = await prisma.team.findMany({
+  const rawTeams = await prisma.team.findMany({
     include: {
       captain: true,
       user: true,
@@ -149,9 +148,7 @@ exports.exportSquadsCSV = catchAsync(async (req, res, next) => {
     orderBy: { name: 'asc' },
   });
 
-  const rows = [['Team Name', 'Captain Name', 'Player Name', 'Sold Points']];
-
-  teams.forEach((t) => {
+  const teamSquads = rawTeams.map((t) => {
     const teamName = t.name || 'Unknown Team';
     let captainName = 'Not Assigned';
 
@@ -166,24 +163,77 @@ exports.exportSquadsCSV = catchAsync(async (req, res, next) => {
       captainName = t.user.name;
     }
 
-    if (t.players && t.players.length > 0) {
+    const squadList = [];
+    squadList.push({
+      name: captainName !== 'Not Assigned' ? `${captainName} (Captain)` : 'Captain (Unassigned)',
+      points: 0,
+    });
+
+    if (Array.isArray(t.players)) {
       t.players.forEach((p) => {
-        rows.push([
-          `"${teamName.replace(/"/g, '""')}"`,
-          `"${captainName.replace(/"/g, '""')}"`,
-          `"${(p.name || '').replace(/"/g, '""')}"`,
-          p.finalBidPrice != null ? p.finalBidPrice : (p.basePrice || 0),
-        ]);
+        const pName = p.name || '';
+        if (
+          !p.isCaptain &&
+          pName.trim().toLowerCase() !== captainName.trim().toLowerCase()
+        ) {
+          squadList.push({
+            name: pName,
+            points: p.finalBidPrice != null ? p.finalBidPrice : (p.basePrice || 0),
+          });
+        }
       });
-    } else {
-      rows.push([
-        `"${teamName.replace(/"/g, '""')}"`,
-        `"${captainName.replace(/"/g, '""')}"`,
-        'None',
-        '0',
-      ]);
     }
+
+    return {
+      teamName,
+      captainName,
+      players: squadList,
+    };
   });
+
+  const maxPlayerRows = Math.max(
+    ...teamSquads.map((s) => s.players.length),
+    1
+  );
+
+  const rows = [];
+
+  // Row 1: Team Names (each team name appears exactly once)
+  const teamHeaderRow = [];
+  teamSquads.forEach((s) => {
+    teamHeaderRow.push(`"${s.teamName.replace(/"/g, '""')}"`, '""');
+  });
+  rows.push(teamHeaderRow);
+
+  // Row 2: Captain Names
+  const captainHeaderRow = [];
+  teamSquads.forEach((s) => {
+    captainHeaderRow.push(`"Captain: ${s.captainName.replace(/"/g, '""')}"`, '""');
+  });
+  rows.push(captainHeaderRow);
+
+  // Row 3: Column Titles
+  const colTitleRow = [];
+  teamSquads.forEach(() => {
+    colTitleRow.push('"Player Name"', '"Sold Points"');
+  });
+  rows.push(colTitleRow);
+
+  // Row 4 onwards: Players & points side-by-side
+  for (let i = 0; i < maxPlayerRows; i++) {
+    const playerRow = [];
+    teamSquads.forEach((s) => {
+      if (s.players[i]) {
+        playerRow.push(
+          `"${s.players[i].name.replace(/"/g, '""')}"`,
+          s.players[i].points
+        );
+      } else {
+        playerRow.push('""', '""');
+      }
+    });
+    rows.push(playerRow);
+  }
 
   const csv = rows.map((r) => r.join(',')).join('\r\n');
 
