@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../context/authContextCore";
 import { useSocket } from "../context/useSocket";
 import { formatAcademicYear } from "../utils/formatters";
+import { handleImageError } from "../utils/imageHelper";
 import CurrentPlayerSkeleton from "./CurrentPlayerSkeleton";
 import AuctionTimer from "./AuctionTimer";
 import AdminTimerControls from "./admin/AdminTimerControls";
@@ -188,8 +189,10 @@ const CurrentPlayer = ({ player: livePlayer, teams = [] }) => {
           <img
             src={image}
             alt={name}
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
             loading="lazy"
+            onError={(e) => handleImageError(e, image)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-4xl text-zinc-700 font-bold">

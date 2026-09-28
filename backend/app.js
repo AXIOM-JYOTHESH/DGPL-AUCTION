@@ -20,23 +20,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS: allow production domains and Vercel preview; include localhost in development
+// CORS: allow production domains, Vercel preview, and localhost
 const productionOrigins = [
   'https://dgpl-auction.tech',
   'https://www.dgpl-auction.tech',
-  // Add your custom preview domain if needed
 ];
-// Include common localhost ports plus explicit LAN development host (mobile testing)
 const devOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  // Add your machine's LAN IP running the Vite dev server so phones on same network can access
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
   'http://192.168.137.1:5173',
 ];
-const allowedOrigins =
-  process.env.NODE_ENV === 'production'
-    ? productionOrigins
-    : productionOrigins.concat(devOrigins);
+const allowedOrigins = productionOrigins.concat(devOrigins);
 
 app.use(
   cors({
@@ -50,7 +46,12 @@ app.use(
     credentials: true,
   })
 ); // this will accept requests from cross orgins ..
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: false,
+  })
+);
 
 //body parser also limits the data to 10 kb ...
 app.use(express.json({ limit: '10kb' }));

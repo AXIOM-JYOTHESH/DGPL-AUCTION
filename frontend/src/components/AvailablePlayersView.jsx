@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContextCore";
 import { formatAcademicYear } from "../utils/formatters";
+import { handleImageError } from "../utils/imageHelper";
 
 const AvailablePlayersView = ({ availablePlayers = [] }) => {
   const { user } = useAuth();
@@ -152,8 +153,10 @@ const AvailablePlayersView = ({ availablePlayers = [] }) => {
                 <img
                   src={player.image}
                   alt={player.name}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   loading="lazy"
+                  onError={(e) => handleImageError(e, player.image)}
                 />
               </Link>
 

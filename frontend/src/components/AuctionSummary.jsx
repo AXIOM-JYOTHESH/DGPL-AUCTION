@@ -64,6 +64,39 @@ const AuctionSummary = () => {
     };
   }, [socket]);
 
+  // Real-time listener for incoming registrations via webhook
+  useEffect(() => {
+    if (!socket) return;
+    const handlePlayerRegistered = (newPlayer) => {
+      if (!newPlayer) return;
+      const pid = newPlayer._id || newPlayer.id;
+      setPlayers((prev) => {
+        const idx = prev.findIndex((p) => (p._id || p.id) === pid);
+        if (idx !== -1) {
+          const updated = [...prev];
+          updated[idx] = newPlayer;
+          return updated;
+        }
+        return [...prev, newPlayer];
+      });
+      if (newPlayer.status === "unsold") {
+        setAvailablePlayers((prev) => {
+          const idx = prev.findIndex((p) => (p._id || p.id) === pid);
+          if (idx !== -1) {
+            const updated = [...prev];
+            updated[idx] = newPlayer;
+            return updated;
+          }
+          return [...prev, newPlayer];
+        });
+      }
+    };
+    socket.on("player_registered", handlePlayerRegistered);
+    return () => {
+      socket.off("player_registered", handlePlayerRegistered);
+    };
+  }, [socket]);
+
   // Fetch teams & players in parallel on mount
   useEffect(() => {
     let isCancelled = false;

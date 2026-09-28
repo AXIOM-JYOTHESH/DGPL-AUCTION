@@ -21,6 +21,12 @@ exports.startAuction = catchAsync(async (req, res, next) => {
   if (player.status === 'sold') {
     return next(new AppError('Player already sold', 400));
   }
+  if (player.status === 'pending') {
+    return next(new AppError('Player registration is pending admin approval', 400));
+  }
+  if (player.status === 'rejected') {
+    return next(new AppError('Player registration has been rejected', 400));
+  }
 
   // Ensure only one player is marked in_auction at a time
   await prisma.player.updateMany({

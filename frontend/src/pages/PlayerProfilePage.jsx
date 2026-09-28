@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { formatAcademicYear } from "../utils/formatters";
+import { handleImageError } from "../utils/imageHelper";
 
 const PlayerProfilePage = () => {
   const { playerId } = useParams();
@@ -145,8 +146,10 @@ const PlayerProfilePage = () => {
               <img
                 src={image}
                 alt={name}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center"
                 loading="lazy"
+                onError={(e) => handleImageError(e, image)}
               />
             </div>
           )}

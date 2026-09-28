@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/authContextCore";
 import YearSelector from "../components/admin/YearSelector";
 import PlayerTable from "../components/admin/PlayerTable";
 import { useSocket } from "../context/useSocket";
 import AuctionTimer from "../components/AuctionTimer";
 import AdminTimerControls from "../components/admin/AdminTimerControls";
+import PlayerRegistrationsManager from "../components/admin/PlayerRegistrationsManager";
 
 // Admin Control Panel: select academic year, view unsold players for that year, start an auction
 const yearOptions = [
@@ -18,7 +19,15 @@ export default function AdminPage() {
   const { token } = useAuth();
   const socketContext = useSocket() || {};
   const socket = socketContext.socket || null;
+  const [activeAdminTab, setActiveAdminTab] = useState("stage"); // "stage" | "registrations"
+  const [pendingCount, setPendingCount] = useState(0);
+
   const [selectedYear, setSelectedYear] = useState(null);
+  const selectedYearRef = useRef(selectedYear);
+  useEffect(() => {
+    selectedYearRef.current = selectedYear;
+  }, [selectedYear]);
+
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,6 +38,31 @@ export default function AdminPage() {
     privacyMode: false,
     auctionCompleted: false,
   });
+
+  // Fetch pending registrations count on mount
+  useEffect(() => {
+    if (!token) return;
+    const fetchPendingCount = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/players/pending-registrations?status=pending`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setPendingCount(data.data?.countsByYear?.total || data.results || 0);
+        }
+      } catch {
+        /* ignore count errors */
+      }
+    };
+    fetchPendingCount();
+  }, [token]);
 
   // Load tournament config & listen for real-time changes
   useEffect(() => {
@@ -246,18 +280,55 @@ export default function AdminPage() {
         prev.map((p) => (p._id === player._id ? { ...p, status: "unsold" } : p))
       );
     };
+    const handlePlayerRegistered = (player) => {
+      if (!player) return;
+      setAuctionMessage(`⚡ Registered via Form: ${player.name} (${player.category})`);
+      const currentYear = selectedYearRef.current;
+      if (currentYear == null || Number(player.year) === Number(currentYear)) {
+        const pid = player._id || player.id;
+        setPlayers((prev) => {
+          const idx = prev.findIndex((p) => (p._id || p.id) === pid);
+          if (idx !== -1) {
+            const updated = [...prev];
+            updated[idx] = player;
+            return updated;
+          }
+          return [...prev, player];
+        });
+      }
+    };
+    const handlePendingRegistration = (player) => {
+      setPendingCount((prev) => prev + 1);
+      setAuctionMessage(`🔔 New Registration: ${player.name} (${player.category}, Year ${player.year || '?'}) submitted via Google Forms! Check Registrations tab to approve.`);
+    };
+    const handlePlayerApprovedEvent = () => {
+      setPendingCount((prev) => Math.max(0, prev - 1));
+      refreshYearPlayers();
+    };
+    const handlePlayerRejectedEvent = () => {
+      setPendingCount((prev) => Math.max(0, prev - 1));
+    };
+
     socket.on("server:new_bid", handleNewBid);
     socket.on("new_player", handleNewPlayer);
     socket.on("server:player_sold", handlePlayerSold);
     socket.on("player_unsold", handlePlayerUnsold);
     // Listen for namespaced unsold event if backend adds it later
     socket.on("server:player_unsold", handlePlayerUnsold);
+    socket.on("player_registered", handlePlayerRegistered);
+    socket.on("player_pending_registration", handlePendingRegistration);
+    socket.on("player_approved", handlePlayerApprovedEvent);
+    socket.on("player_rejected", handlePlayerRejectedEvent);
     return () => {
       socket.off("server:new_bid", handleNewBid);
       socket.off("new_player", handleNewPlayer);
       socket.off("server:player_sold", handlePlayerSold);
       socket.off("player_unsold", handlePlayerUnsold);
       socket.off("server:player_unsold", handlePlayerUnsold);
+      socket.off("player_registered", handlePlayerRegistered);
+      socket.off("player_pending_registration", handlePendingRegistration);
+      socket.off("player_approved", handlePlayerApprovedEvent);
+      socket.off("player_rejected", handlePlayerRejectedEvent);
     };
   }, [socket]);
 
@@ -418,20 +489,63 @@ export default function AdminPage() {
         </div>
 
         {/* Master Random Draw Action Button */}
+        {activeAdminTab === "stage" && (
+          <button
+            type="button"
+            onClick={handleDrawRandomPlayer}
+            disabled={isDrawingRandom}
+            className="py-3 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 font-black text-sm sm:text-base flex items-center gap-2.5 shadow-[0_0_20px_rgba(245,158,11,0.3)] border border-amber-300 hover:brightness-110 active:scale-95 transition-all"
+          >
+            <span className={`text-lg ${isDrawingRandom ? "animate-spin" : ""}`}>
+              🎲
+            </span>
+            <span>{isDrawingRandom ? "Drawing Contender..." : "Draw Random Player"}</span>
+          </button>
+        )}
+      </div>
+
+      {/* Primary Admin Mode Navigation Tabs */}
+      <div className="flex items-center gap-3 mb-8 border-b border-zinc-800 pb-4">
         <button
           type="button"
-          onClick={handleDrawRandomPlayer}
-          disabled={isDrawingRandom}
-          className="py-3 px-5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 font-black text-sm sm:text-base flex items-center gap-2.5 shadow-[0_0_20px_rgba(245,158,11,0.3)] border border-amber-300 hover:brightness-110 active:scale-95 transition-all"
+          onClick={() => setActiveAdminTab("stage")}
+          className={`px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 transition-all ${
+            activeAdminTab === "stage"
+              ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 shadow-lg shadow-amber-400/25 scale-[1.02] border border-amber-300"
+              : "bg-[#0c101d] text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:bg-zinc-800/40"
+          }`}
         >
-          <span className={`text-lg ${isDrawingRandom ? "animate-spin" : ""}`}>
-            🎲
-          </span>
-          <span>{isDrawingRandom ? "Drawing Contender..." : "Draw Random Player"}</span>
+          <span>⚡ Live Auction Console</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveAdminTab("registrations")}
+          className={`relative px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 transition-all ${
+            activeAdminTab === "registrations"
+              ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-zinc-950 shadow-lg shadow-amber-400/25 scale-[1.02] border border-amber-300"
+              : "bg-[#0c101d] text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:bg-zinc-800/40"
+          }`}
+        >
+          <span>📝 Player Registrations & Approvals</span>
+          {pendingCount > 0 && (
+            <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-black animate-pulse shadow-md">
+              {pendingCount} New
+            </span>
+          )}
         </button>
       </div>
 
-      {/* Tournament Privacy & Completion Operations Bar */}
+      {activeAdminTab === "registrations" ? (
+        <PlayerRegistrationsManager
+          onPlayerApproved={() => {
+            refreshYearPlayers();
+            setPendingCount((prev) => Math.max(0, prev - 1));
+          }}
+        />
+      ) : (
+        <>
+          {/* Tournament Privacy & Completion Operations Bar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {/* Privacy Mode Card */}
         <div className="bg-[#0c101d] border border-zinc-800 rounded-2xl p-4 shadow-xl flex items-center justify-between gap-4">
@@ -581,6 +695,8 @@ export default function AdminPage() {
             actionLoadingId={actionLoadingId}
           />
         )}
+        </>
+      )}
     </div>
   );
 }

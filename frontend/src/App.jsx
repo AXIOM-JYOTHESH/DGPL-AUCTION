@@ -179,6 +179,16 @@ function App() {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, 5000);
     };
+    const handlePlayerRegistered = (player) => {
+      if (!player?.name) return;
+      const yr = player.year ? `Year ${player.year}` : "";
+      const msg = `⚡ New Player Registered: ${player.name} (${player.category || "All-Rounder"}${yr ? ` • ${yr}` : ""})`;
+      const id = Date.now() + Math.random();
+      setToasts((prev) => [...prev, { id, message: msg, type: "success" }]);
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 6000);
+    };
     socket.on("new_player", handleNewPlayer);
     socket.on("server:new_bid", handleNewBid);
     socket.on("player_sold", handlePlayerSold); // legacy event name
@@ -186,6 +196,7 @@ function App() {
     socket.on("server:bid_error", handleBidError);
     socket.on("player_unsold", handlePlayerUnsold);
     socket.on("server:player_unsold", handlePlayerUnsold);
+    socket.on("player_registered", handlePlayerRegistered);
     return () => {
       if (import.meta.env.DEV)
         console.log("[App] Detaching new_player listener");
@@ -196,6 +207,7 @@ function App() {
       socket.off("server:bid_error", handleBidError);
       socket.off("player_unsold", handlePlayerUnsold);
       socket.off("server:player_unsold", handlePlayerUnsold);
+      socket.off("player_registered", handlePlayerRegistered);
     };
   }, [socket, isConnected]);
 
