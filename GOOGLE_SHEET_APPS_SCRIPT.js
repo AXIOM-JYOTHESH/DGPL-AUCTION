@@ -14,8 +14,8 @@
  */
 
 // ⚙️ CONFIGURATION: Set your auction backend server URL
-// Active HTTPS tunnel to your local backend server:
-const WEBHOOK_URL = 'https://cedbb0c9c5dff7.lhr.life/api/v1/players/webhook/register';
+// Permanent live production backend on Render:
+const WEBHOOK_URL = 'https://dgpl-auction-hc1b.onrender.com/api/v1/players/webhook/register';
 
 // Optional: Set a secret token matching WEBHOOK_SECRET in backend config.env (leave empty if not using secret)
 const WEBHOOK_SECRET = '';
